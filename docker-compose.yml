@@ -1,0 +1,8 @@
+version: "3.9"
+
+services:
+  phaladata:
+    image: jimagarcia/phaladata
+  phaladataevents:
+    image: jimagarcia/phaladataevents
+    
