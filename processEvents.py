@@ -10,7 +10,7 @@ from pymongo import MongoClient
 import pymongo
 from ast import literal_eval
 import phalaBlockchain 
-import processHourly
+
 
 import time
 
@@ -110,9 +110,7 @@ def processEventBlock(blocknum):
                 e["workerId"] = tminer["_id"]
                 eventsCol.replace_one({"_id":e["_id"]},e)
 
-    currweek = trunc(ts/3600000)
-    print(currweek)
-    processHourly.calcHourly(currweek)
+    
 
 
 client = MongoClient('10.2.2.11', 27017)

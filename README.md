@@ -26,6 +26,12 @@ docker build -t jimagarcia/phaladataeventitems -f Dockerfile-eventItem ./
 docker push jimagarcia/phaladataeventitems
 
 
+Hourly build
+docker build -t jimagarcia/eventhourly -f Dockerfile-hourly ./
+docker push jimagarcia/eventhourly
+
+
+
 processEvents build
 docker build -t jimagarcia/processevents -f Dockerfile-processEvents ./
 docker push jimagarcia/processevents

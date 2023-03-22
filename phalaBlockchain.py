@@ -232,6 +232,8 @@ except ConnectionRefusedError:
 #print(getMiners('0x62f107c9a5ba567f491d312a24280b69a6d5eed52a5f26757da18e888a9b7711'))
 
 
+# print(getBasePool(1674))
+
 
 
 """ result = substrate.query_map('System', 'Account')
