@@ -8,4 +8,4 @@ RUN pip install substrate-interface
 
 
 COPY . .
-CMD ["python3", "accounts.py"]
+CMD ["python3", "processPools.py"]

@@ -194,6 +194,33 @@ def calcHourly(hour): #hour for 0 epoch
                             'method': 'MinerExitUnresponsive'
                         }, {
                             'method': 'MinerExitUnresponive'
+                        },
+                         {
+                            'method': 'PoolCreated'
+                        },
+                         {
+                            'method': 'PoolWorkerAdded'
+                        },
+                         {
+                            'method': 'PoolWorkerRemoved'
+                        },
+                         {
+                            'method': 'MinerStarted'
+                        },
+                         {
+                            'method': 'WorkerStarted'
+                        },
+                         {
+                            'method': 'MinerStopped'
+                        },
+                         {
+                            'method': 'WorkerStopped'
+                        },
+                         {
+                            'method': 'NewAccount'
+                        },
+                         {
+                            'method': 'KilledAccount'
                         }
                     ], 
                     '$and': [
@@ -237,6 +264,99 @@ def calcHourly(hour): #hour for 0 epoch
                     }, 
                     'count': {
                         '$sum': 1
+                    }, 
+                    'poolCreated': {
+                        '$sum': {
+                            '$cond': [
+                               {
+                                            '$eq': [
+                                                '$method', 'PoolCreated'
+                                            ]
+                                        }, 1, 0
+                            ]
+                        }
+                    }, 
+                    'poolWorkerAdded': {
+                        '$sum': {
+                            '$cond': [
+                               {
+                                            '$eq': [
+                                                '$method', 'PoolWorkerAdded'
+                                            ]
+                                        }, 1, 0
+                            ]
+                        }
+                    }, 
+                    'poolWorkerRemoved': {
+                        '$sum': {
+                            '$cond': [
+                               {
+                                            '$eq': [
+                                                '$method', 'PoolWorkerRemoved'
+                                            ]
+                                        }, 1, 0
+                            ]
+                        }
+                    }, 
+                    'newAccount': {
+                        '$sum': {
+                            '$cond': [
+                               {
+                                            '$eq': [
+                                                '$method', 'NewAccount'
+                                            ]
+                                        }, 1, 0
+                            ]
+                        }
+                    }, 
+                    'killedAccount': {
+                        '$sum': {
+                            '$cond': [
+                               {
+                                            '$eq': [
+                                                '$method', 'KilledAccount'
+                                            ]
+                                        }, 1, 0
+                            ]
+                        }
+                    }, 
+                    'workerStarted': {
+                        '$sum': {
+                            '$cond': [
+                                {
+                                    '$or': [
+                                        {
+                                            '$eq': [
+                                                '$method', 'MinerStarted'
+                                            ]
+                                        }, {
+                                            '$eq': [
+                                                '$method', 'WorkerStarted'
+                                            ]
+                                        }
+                                    ]
+                                }, 1, 0
+                            ]
+                        }
+                    }, 
+                    'workerStopped': {
+                        '$sum': {
+                            '$cond': [
+                                {
+                                    '$or': [
+                                        {
+                                            '$eq': [
+                                                '$method', 'MinerStopped'
+                                            ]
+                                        }, {
+                                            '$eq': [
+                                                '$method', 'WorkerStopped'
+                                            ]
+                                        }
+                                    ]
+                                }, 1, 0
+                            ]
+                        }
                     }, 
                     'unresponsive': {
                         '$sum': {
@@ -296,9 +416,24 @@ def calcHourly(hour): #hour for 0 epoch
 
         hr["responsive"] = rw["responsive"]
         hr["unresponsive"] = rw["unresponsive"]
+        hr["poolCreated"] = rw["poolCreated"]
+        hr["poolWorkerAdded"] = rw["poolWorkerAdded"]
+        hr["poolWorkerRemoved"] = rw["poolWorkerRemoved"]
+        hr["newAccount"] = rw["newAccount"]
+        hr["killedAccount"] = rw["killedAccount"]
+        hr["workerStarted"] = rw["workerStarted"]
+        hr["workerStopped"] = rw["workerStopped"]
+
     except:
         hr["responsive"] = 0
         hr["unresponsive"] = 0
+        hr["eventCount"] = 0
+        hr["poolWorkerAdded"] = 0
+        hr["poolWorkerRemoved"] = 0
+        hr["newAccount"] = 0
+        hr["killedAccount"] = 0
+        hr["workerStarted"] = 0
+        hr["workerStopped"] = 0
     #print(hr)
 
 
@@ -371,8 +506,10 @@ def calcHourly(hour): #hour for 0 epoch
         hr["blockCount"] = rw["count"]
         hr["avgBlockTime"] = rw["avgtime"]
     except:
-        hr["responsive"] = 0
-        hr["unresponsive"] = 0
+        hr["minBlockTime"] = 0
+        hr["maxBlockTime"] = 0
+        hr["blockCount"] = 0
+        hr["avgBlockTime"] = 0
     #print(hr)
 
 
@@ -1078,6 +1215,68 @@ def calcHourly(hour): #hour for 0 epoch
 
         
 
+####### events
+
+    agg = [
+            {
+                '$match': {
+                    '$and': [
+                        {
+                            'timestamp': {
+                                '$gte': 1656175686365
+                            }
+                        }, {
+                            'timestamp': {
+                                '$lt': 1658175686365
+                            }
+                        }
+                    ]
+                }
+            }, {
+                '$sort': {
+                    'timestamp': 1
+                }
+            }, {
+                '$project': {
+                    'timeIncrement': {
+                        '$trunc': {
+                            '$divide': [
+                                '$timestamp', 3600000
+                            ]
+                        }
+                    }, 
+                    'eventCount': 1
+                }
+            }, {
+                '$group': {
+                    '_id': '$timeIncrement', 
+                    'eventCount': {
+                        '$sum': '$eventCount'
+                    }
+                }
+            }, {
+                '$sort': {
+                    '_id': 1
+                }
+            }
+        ]
+    
+
+
+    agg[0]["$match"]["$and"][0]["timestamp"]["$gte"] = start
+    agg[0]["$match"]["$and"][1]["timestamp"]["$lt"] = end
+    # print(agg)
+    # print("")
+      
+    try:
+        rw = list(eventsBlockRawCol.aggregate(agg))[0]
+
+        hr["sumEventCount"] = rw["eventCount"]
+        
+    except:
+        hr["sumEventCount"] = 0
+        
+    #print(hr)
 
 
 
@@ -1097,10 +1296,11 @@ phaladb = client['phala']
 
 #### Production
 eventsCol = phaladb['events']    
+eventsBlockRawCol = phaladb['eventblockraw']
 eventsHourlyCol = phaladb['eventshourlys']  
 blockstatsCol = phaladb['blockstats'] 
 
-#calcHourly(465260)
+#calcHourly(466601)
 
 
 

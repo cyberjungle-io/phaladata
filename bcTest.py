@@ -26,15 +26,18 @@ print('Starting Block', account_info.value)
 account_info = substrate.query('PhalaComputation', 'TokenomicParameters', [])
 print('Tokenomic Parameters', account_info.value) 
  """
-account_info = substrate.query('PhalaBasePool', 'Pools', [1152])
-print('Tokenomic Parameters', account_info.value) 
+# account_info = substrate.query('PhalaBasePool', 'Pools', [1152])
+# print('Tokenomic Parameters', account_info.value) 
 
 
 # account_info = substrate.query('PhalaComputation', 'Sessions', ["43E9fDc6HxfDaw5jhL7UGDX5acAPyRDxp2ig95jZ8saTuRSj"])
 # print('Account info', account_info.value) 
 
-# account_info = substrate.query('Assets', 'Account', [10000,"44RGVAd8sadC7Bitqe3tj5NTeXMrojE1NqGecdBiQX2bLUbG"])
+# account_info = substrate.query('PhalaComputation', 'StakerAccounts', ["44RGVAd8sadC7Bitqe3tj5NTeXMrojE1NqGecdBiQX2bLUbG"])
 # print('Account info', account_info.value) 
+
+account_info = substrate.query('PhalaComputation', 'ComputingHalvingInterval', [])
+print('Account info', account_info.value)
 
 """ result = substrate.query_map('System', 'Account')
 

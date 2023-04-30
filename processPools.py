@@ -7,6 +7,7 @@ from ast import literal_eval
 
 import time
 import stakePools
+import phalaUtils
 
 
 
@@ -14,21 +15,19 @@ import stakePools
 client = MongoClient('10.2.2.11', 27017)
 phaladb = client['phala']
 
-processControlCol = phaladb['processcontrol'] 
+poolQueuesCol = phaladb['poolqueues'] 
    
 doProcess = True
 while doProcess == True:
-   
-    pc = processControlCol.find_one({"_id":"processControl"})
-    
-    if pc["pools"] == True:
-        stakePools.UpdateAllPools()
-        pc["pools"] = False
-        
-        processControlCol.replace_one({"_id":"processControl"},pc)
-       
-        
-    
-    time.sleep(120)
+   q = poolQueuesCol.find_one()
+   if q != None:
+      print("Processing Pool: " + str(q["pid"]))
+      poolQueuesCol.delete_one({"_id":q["_id"]})
+      stakePools.UpdatePool(q["pid"])
+      phalaUtils.updatePoolStakers(q["pid"])
+      
+   else:
+      print("sleep")
+      time.sleep(10)
 
         

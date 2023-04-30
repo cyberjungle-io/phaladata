@@ -7,6 +7,7 @@ from pymongo import MongoClient
 from ast import literal_eval
 import time
 import stakePools
+import derivedEvents
 
 
 
@@ -28,7 +29,37 @@ def processBlock(block):
 
         processed = False
 
+        if event["method"] == "Wrapped" and event["section"] == "phalaWrappedBalances":
+            processed = True
+            try:
+                newEvent["account_id"] = event["data"][0]
+                try:
+                    newEvent["amount"] = event["data"][1] / 1000000000000
+                except:
+                    newEvent["amount"] = literal_eval(event["data"][1]) / 1000000000000
+                eventsCol.insert_one(newEvent)
+            except:
+                err = event
+                err["blockNumber"] = block["blockNumber"]
+                err["timestamp"] = block["timestamp"]
+                err["eventNumber"] = eventNum
+                eventErrorsCol.insert_one(err)
 
+        if event["method"] == "Unwrapped" and event["section"] == "phalaWrappedBalances":
+            processed = True
+            try:
+                newEvent["account_id"] = event["data"][0]
+                try:
+                    newEvent["amount"] = event["data"][1] / 1000000000000
+                except:
+                    newEvent["amount"] = literal_eval(event["data"][1]) / 1000000000000
+                eventsCol.insert_one(newEvent)
+            except:
+                err = event
+                err["blockNumber"] = block["blockNumber"]
+                err["timestamp"] = block["timestamp"]
+                err["eventNumber"] = eventNum
+                eventErrorsCol.insert_one(err)
 
 
         if event["method"] == "Deposit" and event["section"] == "balances":
@@ -523,6 +554,8 @@ def processBlock(block):
                 
                 
                 eventsCol.insert_one(newEvent)
+                derivedEvents.processRewardReceivedAccounts(newEvent["_id"])
+
             
             except:
                 try:
@@ -538,6 +571,7 @@ def processBlock(block):
                 
                 
                     eventsCol.insert_one(newEvent)
+                    derivedEvents.processRewardReceivedAccounts(newEvent["_id"])
                     
                 except:
                     err = event

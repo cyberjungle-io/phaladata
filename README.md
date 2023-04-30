@@ -30,6 +30,10 @@ Hourly build
 docker build -t jimagarcia/eventhourly -f Dockerfile-hourly ./
 docker push jimagarcia/eventhourly
 
+processPools build
+docker build -t jimagarcia/processpools -f Dockerfile-processPools ./
+docker push jimagarcia/processpools
+
 
 
 processEvents build

@@ -21,6 +21,11 @@ def getCurrentAPR(miner):
         apr = 0  
     return apr
 
+def getHalvingInterval():
+    wkrid = conn[0].query('PhalaComputation', 'ComputingHalvingInterval', [])
+    #print("worker id: " + str(wkrid.value))
+    
+    return wkrid.value
 
 
 def getWorkerId(pubkey):

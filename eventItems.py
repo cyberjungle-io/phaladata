@@ -7,6 +7,7 @@ from pymongo import MongoClient
 from ast import literal_eval
 import time
 import processEventBlock
+import computeHalving
 
 
 
@@ -35,6 +36,7 @@ while doProcess == True:
             if blk != None:
                 eventsCol.delete_many({"blockNumber":bl["nextBlock"]})
                 processEventBlock.processBlock(blk)
+                computeHalving.CalculateNextHalving()
         else:
             time.sleep(15)
     

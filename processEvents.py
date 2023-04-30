@@ -10,6 +10,7 @@ from pymongo import MongoClient
 import pymongo
 from ast import literal_eval
 import phalaBlockchain 
+import derivedEvents
 
 
 import time
@@ -42,12 +43,22 @@ def processEventBlock(blocknum):
     for e in pevents:
         ts = e["timestamp"]
        
+
+        if e["method"] == "RewardReceived" and e["section"] == "phalaStakePoolv2":   
+            q = {
+                "pid": e["pid"]
+            }
+            poolQueuesCol.insert_one(q)
+        #     derivedEvents.processRewardReceivedAccounts(e["_id"])   
+
+
         # State
         if e["method"] == "WorkerEnterUnresponsive":
            
             tminer = minersCol.find_one({"_id":e["workerId"]})
             if tminer != None:
                 tminer["state"] = "WorkerUnresponsive"
+                tminer["apr"] = 0
                 minersCol.replace_one({"_id":tminer["_id"]},tminer)
         if e["method"] == "WorkerExitUnresponsive":
            
@@ -83,6 +94,7 @@ def processEventBlock(blocknum):
                 
                 tminer["pInstant"] = e["pInstant"]
                 tminer["challengeTimeLast"] = e["timestamp"]
+                tminer["state"] = "WorkerIdle"
 
                 minersCol.replace_one({"_id":tminer["_id"]},tminer)
         if e["method"] == "WorkerStopped":
@@ -120,6 +132,7 @@ eventsCol = phaladb['events']
 
 processControlCol = phaladb['processcontrol'] 
 eventsBlockRawCol = phaladb['eventblockraw']
+poolQueuesCol = phaladb['poolqueues'] 
 
 
 

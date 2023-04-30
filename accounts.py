@@ -7,15 +7,18 @@ from pymongo import MongoClient
 from ast import literal_eval
 import miners
 import time
+import phalaUtils
 
 
 
 def processAccounts():
 
     accounts, blockNumber = miners.getAccounts("http://10.2.3.2:3001")
-
+   
     for account in accounts:
+        account["delegated"] = phalaUtils.updateAccountDelegation(account["_id"])
         accountsCol.replace_one({"_id":account["_id"]},account,upsert=True)
+        
     return blockNumber
 
 

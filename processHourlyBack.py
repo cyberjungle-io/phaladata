@@ -25,10 +25,11 @@ while doProcess == True:
     
     bl =  processControlCol.find_one({"_id":"processHourlyBack"})
    
-    curHour = trunc(time.time()/3600)
+    #curHour = trunc(time.time()/3600)
     if bl["nextBlock"] > 0:
         bl["nextBlock"] = bl["nextBlock"] - 1
         processHourly.calcHourly(bl["nextBlock"])
+        print(bl["nextBlock"])
         processControlCol.replace_one({"_id":"processHourlyBack"},bl)
     else:
         doProcess = False       

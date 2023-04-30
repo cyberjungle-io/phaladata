@@ -9,6 +9,7 @@ from pymongo import MongoClient
 import pymongo
 from ast import literal_eval
 import time
+import phalaUtils
 
 def UpdatePool(pid):
     
@@ -42,19 +43,19 @@ def UpdatePool(pid):
         newpool["owner_reward_account"] = pool["StakePool"]["owner_reward_account"]
         newpool["workers"] = pool["StakePool"]["workers"]
         newpool["workers_count"] = len(pool["StakePool"]["workers"])
-        newpool["white_list"] = phalaBlockchain.getPoolWhitelist(pool["StakePool"]["basepool"]["pid"])
-        newpool["white_list_count"] = len(newpool["white_list"])
-        newpool["stakers"] = getStakers(pool["StakePool"]["basepool"]["pid"])
-        activeStaker = 0
-        deadStaker = 0
-        for stake in newpool["stakers"]:
-            if stake["shares"] > 0:
-                activeStaker = activeStaker + 1
-            else:
-                deadStaker = deadStaker + 1
-        newpool["staker_count"] = len(newpool["stakers"])
-        newpool["active_staker_count"] = activeStaker
-        newpool["dead_staker_count"] = deadStaker
+        #newpool["white_list"] = phalaBlockchain.getPoolWhitelist(pool["StakePool"]["basepool"]["pid"])
+        #newpool["white_list_count"] = len(newpool["white_list"])
+        #newpool["stakers"] = getStakers(pool["StakePool"]["basepool"]["pid"])
+        # activeStaker = 0
+        # deadStaker = 0
+        # for stake in newpool["stakers"]:
+        #     if stake["shares"] > 0:
+        #         activeStaker = activeStaker + 1
+        #     else:
+        #         deadStaker = deadStaker + 1
+        # newpool["staker_count"] = len(newpool["stakers"])
+        # newpool["active_staker_count"] = activeStaker
+        # newpool["dead_staker_count"] = deadStaker
         print(newpool)
         
         try:
@@ -175,6 +176,12 @@ processControlCol = phaladb['processcontrol']
 
 #getStakers(195)
 
+""" tpool = poolsCol.find({})
+for p in tpool:
+    print(p["_id"])
+    UpdatePool(p["_id"])
+    #phalaUtils.updatePoolStakers(p["_id"])
+ """
 
 
-#UpdatePool(1674)
+UpdatePool(1828)
