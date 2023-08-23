@@ -9,7 +9,7 @@ from substrateinterface.exceptions import SubstrateRequestException
 
 try:
     substrate = SubstrateInterface(
-        url="ws://10.2.3.2:9944",
+        url="ws://10.2.4.1:9944",
         type_registry_preset="substrate-node-template"
     )
 except ConnectionRefusedError:
@@ -38,6 +38,9 @@ print('Tokenomic Parameters', account_info.value)
 
 account_info = substrate.query('PhalaComputation', 'ComputingHalvingInterval', [])
 print('Account info', account_info.value)
+
+account_info = substrate.query('PhalaComputation', 'ScheduledTokenomicUpdate', [])
+print(account_info.value)
 
 """ result = substrate.query_map('System', 'Account')
 

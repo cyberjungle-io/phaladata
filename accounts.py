@@ -13,7 +13,7 @@ import phalaUtils
 
 def processAccounts():
 
-    accounts, blockNumber = miners.getAccounts("http://10.2.3.2:3001")
+    accounts, blockNumber = miners.getAccounts("http://10.2.4.1:3001")
    
     for account in accounts:
         account["delegated"] = phalaUtils.updateAccountDelegation(account["_id"])

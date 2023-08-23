@@ -326,27 +326,30 @@ def getAccounts(baseUrl):
     for rec in tmpjson["result"]:
         tRec = {}
         tRec["_id"] = rec[0]
-        
         try:
-            tRec["free"] = int(rec[1]["free"])  / 1000000000000
-        except:
-            tRec["free"] = literal_eval(rec[1]["free"])  / 1000000000000
-        
-        try:
-            tRec["reserved"] = int(rec[1]["reserved"])  / 1000000000000
-        except:
-            tRec["reserved"] = literal_eval(rec[1]["reserved"])  / 1000000000000
+            try:
+                tRec["free"] = int(rec[1]["free"])  / 1000000000000
+            except:
+                tRec["free"] = literal_eval(rec[1]["free"])  / 1000000000000
+            
+            try:
+                tRec["reserved"] = int(rec[1]["reserved"])  / 1000000000000
+            except:
+                tRec["reserved"] = literal_eval(rec[1]["reserved"])  / 1000000000000
 
-        try:
-            tRec["miscFrozen"] = int(rec[1]["miscFrozen"])  / 1000000000000
+            try:
+                tRec["miscFrozen"] = int(rec[1]["miscFrozen"])  / 1000000000000
+            except:
+                tRec["miscFrozen"] = literal_eval(rec[1]["miscFrozen"])  / 1000000000000
+            
+            try:
+                tRec["feeFrozen"] = int(rec[1]["feeFrozen"])  / 1000000000000
+            except:
+                tRec["feeFrozen"] = literal_eval(rec[1]["feeFrozen"])  / 1000000000000
         except:
-            tRec["miscFrozen"] = literal_eval(rec[1]["miscFrozen"])  / 1000000000000
-        
-        try:
-            tRec["feeFrozen"] = int(rec[1]["feeFrozen"])  / 1000000000000
-        except:
-            tRec["feeFrozen"] = literal_eval(rec[1]["feeFrozen"])  / 1000000000000
-        
+            print("error")
+            print(rec)
+             
         tarray.append(tRec)
     
     return tarray, blockNumber

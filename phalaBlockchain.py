@@ -202,7 +202,7 @@ client = MongoClient('10.2.2.11', 27017)
 phaladb = client['phala']
 minersCol= phaladb['miners']
 eventsCol = phaladb['events']
-baseUrl = "http://10.2.3.2:3001"
+baseUrl = "http://10.2.4.1:3001"
 workerBlockNumber = 0
 workerkey = {}
 
@@ -211,7 +211,7 @@ conn = []
 
 try:
     substrate = SubstrateInterface(
-        url="ws://10.2.3.2:9944",
+        url="ws://10.2.4.1:9944",
         type_registry_preset="substrate-node-template"
     )
     conn.append(substrate)
@@ -219,7 +219,7 @@ except ConnectionRefusedError:
     print("⚠️ No local Substrate node running, try running 'start_local_substrate_node.sh' first")
     exit()
 
-#getWorkers()  #gets all workers and mining data
+getWorkers()  #gets all workers and mining data
 
 
 #print('Stake: ', getStake()) 
@@ -255,3 +255,5 @@ for account, account_info in result:
 )
 
 print(era_stakers.value) """
+
+#print(getWorkerId("0x1c0a2de16acbcde5e6a217b230efddda301a2288a5f39c59a65bc787f4def165"))

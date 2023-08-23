@@ -554,7 +554,7 @@ def processBlock(block):
                 
                 
                 eventsCol.insert_one(newEvent)
-                derivedEvents.processRewardReceivedAccounts(newEvent["_id"])
+                
 
             
             except:
@@ -571,7 +571,7 @@ def processBlock(block):
                 
                 
                     eventsCol.insert_one(newEvent)
-                    derivedEvents.processRewardReceivedAccounts(newEvent["_id"])
+                    
                     
                 except:
                     err = event
@@ -1245,6 +1245,7 @@ def processBlock(block):
                     newEvent["to_staker"] = literal_eval(event["data"][2]) / 1000000000000 
               
                 eventsCol.insert_one(newEvent)
+                derivedEvents.processRewardReceivedAccounts(newEvent["_id"])
                 #
                 # stakePools.UpdatePool(newEvent["pid"])
             
@@ -1263,6 +1264,7 @@ def processBlock(block):
               
                     
                     eventsCol.insert_one(newEvent)
+                    derivedEvents.processRewardReceivedAccounts(newEvent["_id"])
                     #stakePools.UpdatePool(newEvent["pid"])
                 except:
                     err = event

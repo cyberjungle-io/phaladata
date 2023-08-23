@@ -65,7 +65,7 @@ while doProcess == True:
     bl =  processControlCol.find_one({"_id":"eventblockraw"})
     if pc["eventblockraw"] == "running":
         bl["nextBlock"] = bl["nextBlock"]+ 1
-        ge = getEvents("http://10.2.3.2:3001",bl["nextBlock"])
+        ge = getEvents("http://10.2.4.1:3001",bl["nextBlock"])
         
         if ge == True:
             blockTime(bl["nextBlock"])

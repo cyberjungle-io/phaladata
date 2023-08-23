@@ -38,5 +38,44 @@ def getPoolsByStaker(uid,tm):
             lastpid = nft["pid"]
     
 
+# get prb peers from /ptp/discover in the prb monitor service at 10.2.3.2:3000. 
+def getPrbLifecyclePeerId():
+    r = requests.post('http://10.2.4.1:3000/ptp/discover')
+    peers = r.json()
+    # print(json.dumps(peers, indent=4, sort_keys=True))
+    # print("Peer ID: " + peers["lifecycleManagers"][0]["peerId"])
+    return peers["lifecycleManagers"][0]["peerId"]
+
+# gets the peerid from getPrbLifecyclePeer, then using the peerid it gets the workers  from the ListWorker endpoint
+def getPrbWorkers():
+    peerid = getPrbLifecyclePeerId()
+    r = requests.post('http://10.2.4.1:3000/ptp/proxy/' + peerid + '/ListWorker')
+    workers = r.json()
+    #print(json.dumps(workers, indent=4, sort_keys=True))
+    #print the count of data.worker array
+    #print("Worker Count: " + str(len(workers["data"]["workers"])))
+
+import requests
+import json
+
+def prbGetWorkerStatus():
+    peerid = getPrbLifecyclePeerId()
+    url = 'http://10.2.4.1:3000/ptp/proxy/' + peerid + '/GetWorkerStatus'
+    headers = {'Content-Type': 'application/json'}
+    
+    data = {"ids":['2f70fe37-bc58-46b7-b20b-81231fe9449d']}
+    
+    response = requests.post(url, headers=headers, data=json.dumps(data))
+    
+    if response.status_code == 200:
+        result = response.json()
+        
+        print("response: " + json.dumps(result["data"]["workerStates"][0], indent=4, sort_keys=True))
+        
+    else:
+        print(f"Worker creation failed. Status code: {response.status_code}")
+        print(response.text)
+
+prbGetWorkerStatus()
 # getStakeByPool(1674,1674157824011)
-getPoolsByStaker("44RGVAd8sadC7Bitqe3tj5NTeXMrojE1NqGecdBiQX2bLUbG",16784157824011)
+#getPoolsByStaker("44RGVAd8sadC7Bitqe3tj5NTeXMrojE1NqGecdBiQX2bLUbG",16784157824011)
