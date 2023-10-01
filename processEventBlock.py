@@ -1321,9 +1321,54 @@ def processBlock(block):
                 err["blockNumber"] = block["blockNumber"]
                 err["timestamp"] = block["timestamp"]
                 eventErrorsCol.insert_one(err)
-        
+    
+
+
+    
+################################################
+#### Remark Core
+################################################
+
+##### NFTBurned 
+        if event["method"] == "NFTBurned" and event["section"] == "rmrkCore":
+            processed = True
+            try:
+                
+                newEvent["account_id"] = event["data"][0]
+                newEvent["cid"] = event["data"][1]
+                newEvent["nft_id"] = event["data"][2]
+                
+                
+                
+                eventsCol.insert_one(newEvent)
+            
+            except:
+                try:
+                    newEvent["account_id"] = event["data"][0]
+                    newEvent["cid"] = event["data"][1]
+                    newEvent["nft_id"] = event["data"][2]
+                    
+                    
+                    eventsCol.insert_one(newEvent)
+                except:
+                    err = event
+                    err["blockNumber"] = block["blockNumber"]
+                    err["timestamp"] = block["timestamp"]
+                    err["eventNumber"] = eventNum
+                    eventErrorsCol.insert_one(err)
+
+
+
+
+
+
+
+
+
         if processed == False:
             eventsCol.insert_one(newEvent) 
+
+
 
 
 

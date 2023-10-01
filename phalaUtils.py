@@ -1,11 +1,9 @@
-import phalaBlockchain
+
 from pymongo import MongoClient
 import pymongo
 import requests
 from miners import convertDate
-import json
-import time
-import math
+
 
 
 
@@ -162,12 +160,21 @@ def updateAccountDelegation(account_id):
     return delegation
 
 
+def get_price_gecko(tokenName,currency):
+    url = "https://api.coingecko.com/api/v3/simple/price?ids=" + tokenName + "&vs_currencies=" + currency
+    response = requests.get(url)
+    if response.status_code == 200:
+        data = response.json()
+        print(data)
+        return data[tokenName][currency]
+    else:
+        print("Error fetching PHA price: ", response.status_code)
 
 
-tdg = updateAccountDelegation("43G4DVpemfWn3hkNG3SvuDEQbuV3o368Rht7Z629EJNxC5Cr")
-print(tdg)
+#pha = get_price_gecko("mantadao","usd")
+#print(pha)
 
 
 
-#updatePoolStakers(1828)
+
    

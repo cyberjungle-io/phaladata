@@ -11,6 +11,7 @@ import pymongo
 from ast import literal_eval
 import phalaBlockchain 
 import derivedEvents
+import processBasePools
 
 
 import time
@@ -32,6 +33,7 @@ def getCurrentAPR(miner):
     return apr
 
 def processEventBlock(blocknum):
+    print("Processing Blocknumber" + str(blocknum))
     pevents = eventsCol.find({"blockNumber":blocknum})
     ts = 0
     
@@ -144,10 +146,18 @@ while doProcess == True:
     pc = processControlCol.find_one({"_id":"processControl"})
     bl =  processControlCol.find_one({"_id":"processEvents"})
     if pc["processEvents"] == "running":
+        
         lb = processControlCol.find_one({"_id":"eventItems"})
+        print("last block: " + str(lb["nextBlock"]))
         if bl["nextBlock"] < lb["nextBlock"] -1:
             bl["nextBlock"] = bl["nextBlock"]+ 1
             print(bl["nextBlock"])
+            if bl["nextSnapshot"] < bl["nextBlock"]:
+                print("before snapshot")
+                processBasePools.doProcessSnapshot()
+                print("after snapshot")
+                bl["nextSnapshot"] = bl["nextBlock"] + pc["snapshotInterval"]
+                bl["lastSnapshot"] = bl["nextBlock"]
             if bl["nextWorkerUpdate"] < bl["nextBlock"]:
                 phalaBlockchain.getWorkers()
                 bl["nextWorkerUpdate"] = bl["nextBlock"] + pc["autoUpdateWorkersBlocks"]
@@ -159,7 +169,7 @@ while doProcess == True:
                     print("about to get workers")
                     phalaBlockchain.getWorkers()
                     bl["lastWorkerUpdate"] = bl["nextBlock"]
-
+            print(bl["nextBlock"])
             processEventBlock(bl["nextBlock"])
             
 

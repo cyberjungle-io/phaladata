@@ -45,4 +45,4 @@ phaladb = client['phala']
 
 eventsCol = phaladb['events']
 
-processRewardReceivedAccounts("3549589-341")
+#processRewardReceivedAccounts("3549589-341")

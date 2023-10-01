@@ -176,7 +176,11 @@ def getPoolCount():
     #print("worker id: " + str(wkrid.value))
     
     return pool.value
-
+def getTotalIssuance():
+    issue = substrate.query('Balances', 'TotalIssuance', [])
+    #print("worker id: " + str(wkrid.value))
+    
+    return issue.value
 def getPoolFree(acct):
     free = conn[0].query('Assets', 'Account', [10000,acct])
     #print("worker id: " + str(wkrid.value))
@@ -219,7 +223,7 @@ except ConnectionRefusedError:
     print("⚠️ No local Substrate node running, try running 'start_local_substrate_node.sh' first")
     exit()
 
-getWorkers()  #gets all workers and mining data
+#getWorkers()  #gets all workers and mining data
 
 
 #print('Stake: ', getStake()) 
@@ -236,8 +240,8 @@ getWorkers()  #gets all workers and mining data
 
 #print(getMiners('0x62f107c9a5ba567f491d312a24280b69a6d5eed52a5f26757da18e888a9b7711'))
 
-
-# print(getBasePool(1674))
+issue = getTotalIssuance()
+print(issue)
 
 
 

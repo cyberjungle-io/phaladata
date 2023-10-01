@@ -4,6 +4,10 @@ Python Phala Block Chain Monitor
 
 Building:
 
+#currency build
+docker build -t jimagarcia/currency -f Dockerfile-currency ./
+docker push jimagarcia/currency
+
 #pools build
 docker build -t jimagarcia/phalapools -f Dockerfile-pools ./
 docker push jimagarcia/phalapools

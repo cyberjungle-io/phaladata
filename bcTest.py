@@ -36,14 +36,14 @@ print('Tokenomic Parameters', account_info.value)
 # account_info = substrate.query('PhalaComputation', 'StakerAccounts', ["44RGVAd8sadC7Bitqe3tj5NTeXMrojE1NqGecdBiQX2bLUbG"])
 # print('Account info', account_info.value) 
 
-account_info = substrate.query('PhalaComputation', 'ComputingHalvingInterval', [])
+account_info = substrate.query('Balances', 'TotalIssuance', [])
 print('Account info', account_info.value)
 
-account_info = substrate.query('PhalaComputation', 'ScheduledTokenomicUpdate', [])
+account_info = substrate.query('Balances', 'Account', ['44RGVAd8sadC7Bitqe3tj5NTeXMrojE1NqGecdBiQX2bLUbG'])
 print(account_info.value)
 
-""" result = substrate.query_map('System', 'Account')
-
+result = substrate.query_map('System', 'Account')
+""" 
 for account, account_info in result:
     if account.value == "44RGVAd8sadC7Bitqe3tj5NTeXMrojE1NqGecdBiQX2bLUbG":
         print(f"Free balance of account '{account.value}': {account_info.value}")

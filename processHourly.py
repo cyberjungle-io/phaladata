@@ -6,7 +6,8 @@ import requests
 from pymongo import MongoClient
 from ast import literal_eval
 import time
-
+import processHourlyWhitelist
+import processHourlyPools
 
 def calcHourly(hour): #hour for 0 epoch
     start = hour * 3600000
@@ -177,7 +178,7 @@ def calcHourly(hour): #hour for 0 epoch
         hr["rewardsLevel4"] = 0
         hr["rewardsLevel5"] = 0
         
-    
+    print("after rewards")
 ####### responsive
 
     agg = [
@@ -408,7 +409,7 @@ def calcHourly(hour): #hour for 0 epoch
 
     agg[0]["$match"]["$and"][0]["timestamp"]["$gte"] = start
     agg[0]["$match"]["$and"][1]["timestamp"]["$lt"] = end
-    # print(agg)
+    print(agg)
     # print("")
       
     try:
@@ -435,7 +436,7 @@ def calcHourly(hour): #hour for 0 epoch
         hr["workerStarted"] = 0
         hr["workerStopped"] = 0
     #print(hr)
-
+    print("after responsive")
 
 
 ####### block time
@@ -511,7 +512,7 @@ def calcHourly(hour): #hour for 0 epoch
         hr["blockCount"] = 0
         hr["avgBlockTime"] = 0
     #print(hr)
-
+    print("after block time")
 
 ####### apr
     agg = [
@@ -1213,7 +1214,8 @@ def calcHourly(hour): #hour for 0 epoch
         hr["apr_l5_stake_10_15"] = 0
         hr["apr_l5_stake_gt15"] = 0
 
-        
+    
+    print("after apr")  
 
 ####### events
 
@@ -1286,6 +1288,9 @@ def calcHourly(hour): #hour for 0 epoch
 
     eventsHourlyCol.replace_one({"_id":hour},hr,upsert=True)
 
+    processHourlyWhitelist.calcHourly(hour)
+    processHourlyPools.calcHourly(hour)
+
     
 
 
@@ -1300,7 +1305,7 @@ eventsBlockRawCol = phaladb['eventblockraw']
 eventsHourlyCol = phaladb['eventshourlys']  
 blockstatsCol = phaladb['blockstats'] 
 
-#calcHourly(466601)
+calcHourly(470951)
 
 
 

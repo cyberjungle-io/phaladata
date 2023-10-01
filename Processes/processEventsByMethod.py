@@ -14,24 +14,16 @@ eventsCol = phaladb['events']
 cnt = 0 
 
 while True:
-    events = eventsCol.find({"$or": [
-            {
-            "method": 'Wrapped'
-            },
-            {
-            "method": 'Unwrapped'
-            }
-            ],
+    events = eventsCol.find({
+            "method": 'NFTBurned',
             "account_id":None,
-            "section": 'phalaWrappedBalances'
+            "section": 'rmrkCore'
             }).limit(500)
     
     for e in events:
         e["account_id"] = e["data"][0]
-        try:
-            e["amount"] = e["data"][1] / 1000000000000
-        except:
-            e["amount"] = literal_eval(e["data"][1]) / 1000000000000
+        e["cid"] = e["data"][1]
+        e["nft_id"] = e["data"][2]
         eventsCol.replace_one({"_id":e["_id"]},e)
         cnt = cnt + 1
 
