@@ -8,6 +8,11 @@ import json
 import time
 import math
 
+def getBlockHeight():
+    wkrid = conn[0].query('System', 'Number', [])
+    #print("worker id: " + str(wkrid.value))
+    
+    return wkrid.value
 
 def getCurrentAPR(miner):
     apr = 0
@@ -164,7 +169,12 @@ def updateWorkerbyPubKey(pubkey,blocknumber):
    # except:
     #    print("get failed")
     #    return {}
+def getOnlineWorkers():
+    comp = conn[0].query('PhalaComputation', 'OnlineWorkers', [])
+    #print("worker id: " + str(wkrid.value))
     
+    return comp.value
+
 def getBasePool(pid):
     pool = conn[0].query('PhalaBasePool', 'Pools', [pid])
     #print("worker id: " + str(wkrid.value))
@@ -240,8 +250,8 @@ except ConnectionRefusedError:
 
 #print(getMiners('0x62f107c9a5ba567f491d312a24280b69a6d5eed52a5f26757da18e888a9b7711'))
 
-issue = getTotalIssuance()
-print(issue)
+# workers = getOnlineWorkers()
+# print(workers)
 
 
 

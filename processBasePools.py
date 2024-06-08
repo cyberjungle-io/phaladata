@@ -16,6 +16,7 @@ def doProcessSnapshot():
     #get the last pool
     poolCount = phalaBlockchain.getPoolCount()
     print ("pool count: " + str(poolCount))
+    
 
     #loop from 0 to poolCount
     cnt = 0
@@ -94,10 +95,12 @@ def doProcessSnapshot():
     ]
 
     result = list(eventsCol.aggregate(agg))
+    print(agg)
+    print("doProcessBasePools 98")
     print(result)
     delegationApr = (result[0]["to_staker"]*365) / value  * 100
     workerApr = (result[0]["to_owner"] + result[0]["to_staker"])*365 / value * 100
-
+    print("doProcessBasePools 102")
 
     #store 24 hour totals in currentchainstats
     hr24 = {"_id":"24HourRewardStats",
@@ -111,4 +114,17 @@ def doProcessSnapshot():
                 }
     chainCol.replace_one({"_id":"24HourRewardStats"},hr24,upsert=True)
 
+
+    # onlineWorkers = phalaBlockchain.getOnlineWorkers() and store in currentchainstats
+    onlineWorkers = phalaBlockchain.getOnlineWorkers()
+    oworkers = {"_id":"OnlineWorkers",
+                "onlineWorkers":onlineWorkers,
+                "timestamp":int(time.time())*1000
+                }
+    chainCol.replace_one({"_id":"OnlineWorkers"},oworkers,upsert=True)
+
+
+
     client.close()
+
+#doProcessSnapshot()

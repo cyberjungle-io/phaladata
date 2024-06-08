@@ -8,6 +8,7 @@ from ast import literal_eval
 import time
 import processHourlyWhitelist
 import processHourlyPools
+import processHourlyVscore
 
 def calcHourly(hour): #hour for 0 epoch
     start = hour * 3600000
@@ -1290,6 +1291,7 @@ def calcHourly(hour): #hour for 0 epoch
 
     processHourlyWhitelist.calcHourly(hour)
     processHourlyPools.calcHourly(hour)
+    processHourlyVscore.calcHourly(hour)
 
     
 
@@ -1305,7 +1307,7 @@ eventsBlockRawCol = phaladb['eventblockraw']
 eventsHourlyCol = phaladb['eventshourlys']  
 blockstatsCol = phaladb['blockstats'] 
 
-calcHourly(470951)
+#calcHourly(470951)
 
 
 

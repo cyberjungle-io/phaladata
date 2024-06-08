@@ -6,6 +6,8 @@ import requests
 from pymongo import MongoClient
 from ast import literal_eval
 import time
+import phalaBlockchain
+import kusamaBlockChain
 
 
 def blockTime(blk):
@@ -48,12 +50,23 @@ def getEvents(baseUrl,blockNumber):
     except Exception as e:
        
         
-        print("get failed" + str(e))
+        print("get failed:" + str(e))
         return False
    
+def getBlockHeight():
+    chainHeight = phalaBlockchain.getBlockHeight()
+    parentHeight = kusamaBlockChain.getBlockHeight()
+    tdata = {
+        "chainHeight":chainHeight,
+        "parentHeight":parentHeight
+    }
+    chainCol.replace_one({"_id":"blockHeight"},tdata,upsert=True)
+    
+    
 
 client = MongoClient('10.2.2.11', 27017)
 phaladb = client['phala']
+chainCol = phaladb['currentchainstats']
 eventsBlockRawCol = phaladb['eventblockraw']
 processControlCol = phaladb['processcontrol']
 blockstatsCol = phaladb['blockstats'] 
@@ -66,12 +79,13 @@ while doProcess == True:
     if pc["eventblockraw"] == "running":
         bl["nextBlock"] = bl["nextBlock"]+ 1
         ge = getEvents("http://10.2.4.1:3001",bl["nextBlock"])
+        getBlockHeight()
         
         if ge == True:
             blockTime(bl["nextBlock"])
             processControlCol.replace_one({"_id":"eventblockraw"},bl)
         else:
-            time.sleep(30)
+            time.sleep(10)
     else:
         time.sleep(10)
         

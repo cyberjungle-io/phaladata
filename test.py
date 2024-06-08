@@ -7,7 +7,7 @@ from pymongo import MongoClient
 import pymongo
 from ast import literal_eval
 import time
-
+import subprocess
 
 client = MongoClient('10.2.2.11', 27017)
 phaladb = client['phala']
@@ -76,6 +76,10 @@ def prbGetWorkerStatus():
         print(f"Worker creation failed. Status code: {response.status_code}")
         print(response.text)
 
-prbGetWorkerStatus()
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return None
+
+#prbGetWorkerStatus()
 # getStakeByPool(1674,1674157824011)
 #getPoolsByStaker("44RGVAd8sadC7Bitqe3tj5NTeXMrojE1NqGecdBiQX2bLUbG",16784157824011)

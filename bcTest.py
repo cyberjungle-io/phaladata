@@ -26,23 +26,23 @@ print('Starting Block', account_info.value)
 account_info = substrate.query('PhalaComputation', 'TokenomicParameters', [])
 print('Tokenomic Parameters', account_info.value) 
  """
-# account_info = substrate.query('PhalaBasePool', 'Pools', [1152])
+# account_info = substrate.query('System', 'PoolCount', [])
 # print('Tokenomic Parameters', account_info.value) 
 
 
-# account_info = substrate.query('PhalaComputation', 'Sessions', ["43E9fDc6HxfDaw5jhL7UGDX5acAPyRDxp2ig95jZ8saTuRSj"])
-# print('Account info', account_info.value) 
+#account_info = substrate.query('PhalaComputation', 'Sessions', ["43E9fDc6HxfDaw5jhL7UGDX5acAPyRDxp2ig95jZ8saTuRSj"])
+#print('Account info', account_info.value) 
 
 # account_info = substrate.query('PhalaComputation', 'StakerAccounts', ["44RGVAd8sadC7Bitqe3tj5NTeXMrojE1NqGecdBiQX2bLUbG"])
 # print('Account info', account_info.value) 
 
-account_info = substrate.query('Balances', 'TotalIssuance', [])
-print('Account info', account_info.value)
+# account_info = substrate.query('System', 'Events', [])
+# print('Account info', account_info.value)
 
-account_info = substrate.query('Balances', 'Account', ['44RGVAd8sadC7Bitqe3tj5NTeXMrojE1NqGecdBiQX2bLUbG'])
+account_info = substrate.query('PhalaBasePool', 'PoolContributionWhitelists', ['1674'])
 print(account_info.value)
 
-result = substrate.query_map('System', 'Account')
+#result = substrate.query_map('System', 'Account')
 """ 
 for account, account_info in result:
     if account.value == "44RGVAd8sadC7Bitqe3tj5NTeXMrojE1NqGecdBiQX2bLUbG":

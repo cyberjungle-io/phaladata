@@ -85,6 +85,8 @@ def processEventBlock(blocknum):
                
                 e["apr"] = tminer["apr"]
                 e["stake"] = tminer["stake"]
+                e["confidenceLevel"] = tminer["confidenceLevel"]
+
                 
                 eventsCol.replace_one({"_id":e["_id"]},e)
                 

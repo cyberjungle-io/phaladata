@@ -6,7 +6,7 @@ import requests
 from pymongo import MongoClient
 from ast import literal_eval
 import time
-import processHourly
+import processHourlyVscore
 
 
 
@@ -28,7 +28,7 @@ while doProcess == True:
     #curHour = trunc(time.time()/3600)
     if bl["nextBlock"] > 0:
         bl["nextBlock"] = bl["nextBlock"] - 1
-        processHourly.calcHourly(bl["nextBlock"])
+        processHourlyVscore.calcHourly(bl["nextBlock"])
         print(bl["nextBlock"])
         processControlCol.replace_one({"_id":"processHourlyBack"},bl)
     else:
